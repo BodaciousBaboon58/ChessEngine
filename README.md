@@ -1,2 +1,2 @@
 # ChessEngine
-CWRU Collaborate Coding Club project. 
+CWRU Collaborative Coding Club project. 
