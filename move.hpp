@@ -6,15 +6,11 @@
 
 class Move {
 public:
-    Move(int start_square, int end_square) : move(
-        start_square + (end_square << 6)
-    ) {}
-    int start_square() {
-        return move & (0b111111);
-    }
-    int end_square() {
-        return move >> 6;
-    }
+    Move(int start_square, int end_square);
+
+    int start_square();
+
+    int end_square();
 private:
     uint16_t move;
 };
