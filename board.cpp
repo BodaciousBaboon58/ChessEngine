@@ -1,11 +1,10 @@
 #include <cctype> // std::isdigit
+#include <iostream>
 
 #include "board.hpp"
 #include "piece.hpp"
 
-Board::Board() {
-    Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-}
+Board::Board() : Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") {}
 
 Board::Board(std::string FEN) {
     // only does pieces so far, does not handle turn, castling, other stuff I can't identify
@@ -17,45 +16,32 @@ Board::Board(std::string FEN) {
         if (item == '/') {
             continue;
         } else if (item == ' ') {
-            break; // 
-        }
-        if (std::isdigit(item)) {
+            break;
+        } else if (std::isdigit(item)) { // skip that many squares
             current_square += item - '0';
         } else {
-            Piece piece;
-            switch (item) {
-                // todo: there are way too many of these case switches
-                case 'p': piece = Piece::BLACK_PAWN; break;
-                case 'r': piece = Piece::BLACK_ROOK; break;
-                case 'n': piece = Piece::BLACK_KNIGHT; break;
-                case 'b': piece = Piece::BLACK_BISHOP; break;
-                case 'k': piece = Piece::BLACK_KING; break;
-                case 'q': piece = Piece::BLACK_QUEEN; break;
-
-                case 'P': piece = Piece::WHITE_PAWN; break;
-                case 'R': piece = Piece::WHITE_ROOK; break;
-                case 'N': piece = Piece::WHITE_KNIGHT; break;
-                case 'B': piece = Piece::WHITE_BISHOP; break;
-                case 'K': piece = Piece::WHITE_KING; break;
-                case 'Q': piece = Piece::WHITE_QUEEN; break;
-
-                default: piece = Piece::NONE; // this is an error btw
-            }
-            set_piece_at(current_square, piece);
+            set_piece_at(current_square, character_to_piece[item]);
+            current_square++;
         }
     }
 }
 
 void Board::display() {
-    
+    for (int i = 0; i < 64; i++) {
+        std::cout << piece_to_character[piece_at(i)];
+        if (i % 8 == 7) {
+            std::cout << "\n";
+        }
+    }
 }
 
 bool Board::validate_pseudolegal_move(Move m) {
-
+    return true;
 }
 
 Piece Board::piece_at(int square) {
     // compiler will optimize this hopefully
+    // TODO: also keep separate representation as array[Piece]
     u64 bit = 1ULL << square;
 
     if (bit & white_mask) {
@@ -94,7 +80,7 @@ void Board::set_piece_at(int square, Piece piece) {
     }
 
     // update individual piece mask
-    switch (piece % 7) { // compiler will optimize :)
+    switch (piece % 6) {
         case (Piece::WHITE_PAWN):   pawn_bb |= bit;     break;
         case (Piece::WHITE_ROOK):   rook_bb |= bit;     break;
         case (Piece::WHITE_KNIGHT): knight_bb |= bit;   break;
@@ -123,32 +109,33 @@ void Board::make_move(Move m) {
 }
 
 bool Board::is_game_over() {
-
+    return false;
 }
 
 std::vector<Move> Board::generate_pseudolegal_moves() {
-
+    return std::vector<Move>();
 }
 
 std::vector<Move> Board::_generate_pawn_moves(u64 pawn) {
-
+    return std::vector<Move>();
 }
 
 std::vector<Move> Board::_generate_rook_moves(u64 rook) {
-
+    return std::vector<Move>();
 }
 
 std::vector<Move> Board::_generate_knight_moves(u64 knight) {
+    return std::vector<Move>();
 }
 
 std::vector<Move> Board::_generate_bishop_moves(u64 bishop) {
-
+    return std::vector<Move>();
 }
 
 std::vector<Move> Board::_generate_king_moves(u64 king) {
-    
+    return std::vector<Move>();
 }
 
 std::vector<Move> Board::_generate_queen_moves(u64 queen) {
-
+    return std::vector<Move>();
 }

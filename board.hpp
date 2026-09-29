@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -24,7 +26,7 @@ private:
     u64 white_mask;
     u64 black_mask;
 
-    bool is_white_turn;
+    bool is_white_turn = true;
 public:
     Board();
 
