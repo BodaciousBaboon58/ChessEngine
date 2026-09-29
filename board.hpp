@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "move.hpp"
+#include "piece.hpp"
 
 // todo: make a cpp and hpp file like a normal person
 
@@ -10,8 +11,8 @@ typedef uint64_t u64;
 
 class Board {
 // NOTES:
-// bitboard bits are in column-major order
-// bit 0 (LSB) = A1, bit 1 = A2, bit 2 = A3, ...
+// i lowkey scrapped old square order. 
+// square 0 = A8, square 1 = B8, square 8 = A7...
 private:
     u64 rook_bb;
     u64 bishop_bb;
@@ -28,6 +29,14 @@ public:
     Board();
 
     Board(std::string fen);
+
+    void display();
+
+    Piece piece_at(int square);
+
+    void set_piece_at(int square, Piece piece);
+
+    void clear_square(int square);
 
     bool validate_pseudolegal_move(Move m);
 
