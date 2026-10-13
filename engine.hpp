@@ -5,7 +5,7 @@
 #include <evaluation.hpp>
 #include <search.hpp>
 
-class engine
+class Engine
 {
     private:
         
