@@ -49,3 +49,19 @@ std::unordered_map<char, Piece> character_to_piece = {
     {'q', Piece::BLACK_QUEEN},
     {' ', Piece::NONE}
 };
+//remove when we have a GUI
+std::unordered_map<char, std::string> character_to_symbol = {
+    {'P', "♙"},
+    {'R', "♖"},
+    {'N', "♘"},
+    {'B', "♗"},
+    {'K', "♔"},
+    {'Q', "♕"},
+    {'p', "♟︎"},
+    {'r', "♜"},
+    {'n', "♞"},
+    {'b', "♝"},
+    {'k', "♚"},
+    {'q', "♛"},
+    {' ', " "}
+};

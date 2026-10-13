@@ -7,9 +7,27 @@
 Board::Board() : Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") {}
 
 Board::Board(std::string FEN) {
-    // only does pieces so far, does not handle turn, castling, other stuff I can't identify
     int s_index = -1;
     int current_square = 0;
+    std::string castling_info;
+
+    std::string ranks[8];
+    std::string fen_metadata;
+    for(int i=0; i<8; i++){
+        if(i<7){
+            ranks[7-i]=FEN.substr(0,FEN.find('/'));
+            FEN = std::string(FEN.begin() + FEN.find('/')+1, FEN.end());
+        }
+        else{
+            ranks[7-i]=FEN.substr(0,FEN.find(' '));
+            FEN = std::string(FEN.begin() + FEN.find_first_of(' '), FEN.end());
+        }
+    }
+    fen_metadata=FEN;
+    FEN="";
+    for(int i=0; i<8; i++){
+        FEN.append(ranks[i]);
+    }
     while (current_square < 64) {
         s_index++;
         char item = FEN[s_index];
@@ -18,18 +36,36 @@ Board::Board(std::string FEN) {
         } else if (item == ' ') {
             break;
         } else if (std::isdigit(item)) { // skip that many squares
-            current_square += item - '0';
+            for(int i=0; i<item-'0'; i++){
+                set_piece_at(current_square,character_to_piece[' ']);
+                current_square++;
+            }
         } else {
             set_piece_at(current_square, character_to_piece[item]);
             current_square++;
         }
     }
+    is_white_turn=(fen_metadata[fen_metadata.find_first_not_of(' ')] == 'w');
+    fen_metadata=fen_metadata.substr(3);
+    can_castle_wk=(fen_metadata.find('K')!=std::string::npos);
+    can_castle_wq=(fen_metadata.find('Q')!=std::string::npos);
+    can_castle_bk=(fen_metadata.find('k')!=std::string::npos);
+    can_castle_bq=(fen_metadata.find('q')!=std::string::npos);
+    fen_metadata=fen_metadata.substr(fen_metadata.find_first_of(' '));
+    full_move_clock=stoi(fen_metadata.substr(fen_metadata.find_last_of(' ')));
+    fen_metadata=fen_metadata.substr(0,fen_metadata.find_last_of(' '));
+    half_move_clock=stoi(fen_metadata.substr(fen_metadata.find_last_of(' ')));
+    fen_metadata=fen_metadata.substr(0,fen_metadata.find_last_of(' '));
+    fen_metadata=fen_metadata.substr(1,fen_metadata.size()-1);
+    if(fen_metadata.find('-')==fen_metadata.find('*')){
+        ep_square = (fen_metadata[1]-'0')*8+(fen_metadata[0]-'a');
+    }
 }
 
 void Board::display() {
-    for (int i = 0; i < 64; i++) {
-        std::cout << piece_to_character[piece_at(i)];
-        if (i % 8 == 7) {
+    for (int i = 63; i >= 0; i--) {
+        std::cout << character_to_symbol[piece_to_character[get_piece_at(7 ^ i)]]<<' ';
+        if (i % 8 == 0) {
             std::cout << "\n";
         }
     }
@@ -39,7 +75,7 @@ bool Board::validate_pseudolegal_move(Move m) {
     return true;
 }
 
-Piece Board::piece_at(int square) {
+Piece Board::get_piece_at(int square) {
     // compiler will optimize this hopefully
     // TODO: also keep separate representation as array[Piece]
     u64 bit = 1ULL << square;

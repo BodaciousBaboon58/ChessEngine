@@ -12,9 +12,6 @@
 typedef uint64_t u64;
 
 class Board {
-// NOTES:
-// i lowkey scrapped old square order. 
-// square 0 = A8, square 1 = B8, square 8 = A7...
 private:
     u64 rook_bb;
     u64 bishop_bb;
@@ -26,15 +23,32 @@ private:
     u64 white_mask;
     u64 black_mask;
 
-    bool is_white_turn = true;
+
+
+    
 public:
+
+    bool is_white_turn = true;
+
+    //fifty move rule counter
+    int half_move_clock = 0;
+    //moves in game
+    int full_move_clock = 0;
+
+    //wk=white kingside, wq=white queenside, etc etc
+    bool can_castle_wk = true;
+    bool can_castle_wq = true;
+    bool can_castle_bk = true;
+    bool can_castle_bq = true;
+    int8_t ep_square=-1;
+
     Board();
 
     Board(std::string fen);
 
     void display();
 
-    Piece piece_at(int square);
+    Piece get_piece_at(int square);
 
     void set_piece_at(int square, Piece piece);
 
