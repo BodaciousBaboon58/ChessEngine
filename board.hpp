@@ -54,28 +54,11 @@ public:
 
     void clear_square(int square);
 
-    bool validate_pseudolegal_move(Move m);
+    bool validate_move(Move m);
 
     void make_move(Move m);
 
     bool is_game_over(void);
 
-    std::vector<Move> generate_pseudolegal_moves();
 
-    // for each of the following methods:
-    // not private because engine peeps might want finer-grained control over generation
-    // TODO: "factorize" clz out because that's lowkey weird to have here
-    // do NOT pass 0 in because that's UB
-
-    std::vector<Move> _generate_pawn_moves(u64 pawn);
-
-    std::vector<Move> _generate_rook_moves(u64 rook);
-
-    std::vector<Move> _generate_knight_moves(u64 knight);
-
-    std::vector<Move> _generate_bishop_moves(u64 bishop);
-
-    std::vector<Move> _generate_king_moves(u64 king);
-
-    std::vector<Move> _generate_queen_moves(u64 queen);
 };
